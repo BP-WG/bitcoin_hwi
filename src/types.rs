@@ -3,34 +3,34 @@ use bitcoin::util::bip32::ExtendedPubKey;
 
 use serde::Deserialize;
 
-#[derive(Deserialize)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Deserialize)]
 pub struct HWIExtendedPubKey {
     pub xpub: ExtendedPubKey,
 }
 
-#[derive(Deserialize)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Deserialize)]
 pub struct HWISignature {
     pub signature: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Deserialize)]
 pub struct HWIAddress {
     pub address: Address,
 }
 
-#[derive(Deserialize)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Deserialize)]
 pub struct HWIPartiallySignedTransaction {
     pub psbt: String,
 }
 
 // TODO: use Descriptors
-#[derive(Deserialize)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Deserialize)]
 pub struct HWIDescriptor {
     pub internal: Vec<String>,
     pub receive: Vec<String>,
 }
 
-#[derive(Deserialize)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Deserialize)]
 pub struct HWIKeyPoolElement {
     pub desc: String,
     pub range: Vec<u32>,
@@ -40,7 +40,7 @@ pub struct HWIKeyPoolElement {
     pub watchonly: bool,
 }
 
-#[derive(Clone)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Deserialize)]
 pub enum HWIAddressType {
     Pkh,
     ShWpkh,

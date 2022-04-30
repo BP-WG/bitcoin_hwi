@@ -21,7 +21,7 @@
 //! ```
 
 #[macro_use]
-extern crate strum_macros;
+extern crate amplify;
 
 #[cfg(test)]
 #[macro_use]

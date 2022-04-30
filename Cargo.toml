@@ -8,10 +8,10 @@ description = "Rust wrapper for Bitcoin Core Hardware Wallet Interface."
 repository = "https://github.com/BP-WG/descriptor-wallet"
 
 [dependencies]
+amplify = "3.12.0"
 bitcoin = { version = "0.28.0", features = ["use-serde"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1" }
-strum_macros = "0.24"
 base64 = "0.13"
 
 [dev-dependencies]

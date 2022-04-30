@@ -5,7 +5,8 @@ use bitcoin::util::bip32::{DerivationPath, Fingerprint};
 use crate::error::Error;
 use crate::types::HWIAddressType;
 
-#[derive(Display)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Display)]
+#[display(Debug)]
 pub enum HWISubcommand {
     Enumerate,
     GetMasterXpub,

@@ -25,7 +25,7 @@ macro_rules! deserialize_obj {
     }};
 }
 
-#[derive(Clone, Deserialize)]
+#[derive(Clone, PartialEq, Eq, Hash, Debug, Deserialize)]
 pub struct HWIDevice {
     #[serde(rename(deserialize = "type"))]
     pub device_type: String,
