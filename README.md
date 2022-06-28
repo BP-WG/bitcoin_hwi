@@ -1,4 +1,9 @@
 # rust-hwi
+
+**NB: This is a temporary fork of https://github.com/bitcoindevkit/rust-hwi. The plan is the full rewrite from scratch not to depend and not to work with the command-line python `hwi` utility and use `libusb` directly from rust - with improved data types and error reporting.**
+
+Here is the copy of the original README:
+
 Rust wrapper for [HWI](https://github.com/bitcoin-core/HWI/).
 
 ## Prerequisites
