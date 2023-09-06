@@ -6,96 +6,95 @@ Here is the copy of the original README:
 
 Rust wrapper for [HWI](https://github.com/bitcoin-core/HWI/).
 
+<a href="https://crates.io/crates/hwi"><img alt="Crate Info" src="https://img.shields.io/crates/v/hwi.svg"/></a>
+<a href="https://docs.rs/hwi"><img alt="API Docs" src="https://img.shields.io/badge/docs.rs-hwi-green"/></a>
+<a href="https://blog.rust-lang.org/2020/02/27/Rust-1.41.1.html"><img alt="Rustc Version 1.41+" src="https://img.shields.io/badge/rustc-1.41%2B-lightgrey.svg"/></a>
+<a href="https://discord.gg/d7NkDKm"><img alt="Chat on Discord" src="https://img.shields.io/discord/753336465005608961?logo=discord"></a>
+
+This library internally uses PyO3 to call HWI's functions. It is not a re-implementation of HWI in native Rust.
+
+## MSRV
+
+The MSRV for this project is `1.48.0`. To build with the MSRV you will need to pin some dependencies:
+```bash
+cargo update -p serde_json --precise 1.0.99
+cargo update -p serde --precise 1.0.156
+cargo update -p once_cell --precise 1.14.0
+cargo update -p quote --precise 1.0.30
+cargo update -p proc-macro2 --precise 1.0.65
+```
+
 ## Prerequisites
 
 Python 3 is required. The libraries and [udev rules](https://github.com/bitcoin-core/HWI/blob/master/hwilib/udev/README.md) for each device must also be installed. Some libraries will need to be installed
 
 For Ubuntu/Debian:
-```
+```bash
 sudo apt install libusb-1.0-0-dev libudev-dev python3-dev
 ```
 
 For Centos:
-```
+```bash
 sudo yum -y install python3-devel libusbx-devel systemd-devel
 ```
 
 For macOS:
-```
+```bash
 brew install libusb
 ```
 
 ## Install
 
 - Clone the repo
-```
-git clone https://github.com/MagicalBitcoin/rust-hwi.git && cd rust-hwi
+```bash
+git clone https://github.com/bitcoindevkit/rust-hwi.git && cd rust-hwi
 ```
 
 - Create a virtualenv:
 
-```
+```bash
 virtualenv -p python3 venv
 source venv/bin/activate
 ```
 
 - Install all the dependencies using pip:
 
-```
+```bash
 pip install -r requirements.txt
 ```
 
-## Supported commands
+## Usage
 
-| Command | Supported? |
-|:---:|:---: |
-| enumerate | YES |
-| getmasterxpub | YES |
-| signtx | YES |
-| getxpub | YES |
-| signmessage | YES |
-| getkeypool | YES |
-| getdescriptors | YES |
-| displayaddress | YES | 
-| setup | Planned |
-| wipe | Planned |
-| restore | Planned |
-| backup | Planned |
-| promptpin | Planned |
-| sendpin | Planned |
+```rust
+use bitcoin::Network;
+use bitcoin::bip32::DerivationPath;
+use hwi::error::Error;
+use hwi::HWIClient;
+use std::str::FromStr;
 
-| Flag | Supported? |
-|:---:|:---:|
-| --device-path | YES |
-| --device-type | YES |
-| --password | Planned |
-| --stdinpass | NO |
-| --testnet | Planned |
-| --debug | Planned |
-| --fingerprint | YES |
-| --version | Planned |
-| --stdin | NO |
-| --interactive | Planned |
+fn main() -> Result<(), Error> {
+    let mut devices = HWIClient::enumerate()?;
+    if devices.is_empty() {
+        panic!("No devices found!");
+    }
+    let first_device = devices.remove(0)?;
+    let client = HWIClient::get_client(&first_device, true, Network::Bitcoin.into())?;
+    let derivation_path = DerivationPath::from_str("m/44'/1'/0'/0/0").unwrap();
+    let s = client.sign_message("I love BDK wallet", &derivation_path)?;
+    println!("{:?}", s.signature);
+    Ok(())
+}
+```
 
-## Tests
+## Testing
 
-At the moment you'll need a HW plugged in to be able to run tests.
+To run the tests, you need to have a hardware wallet plugged in. If you don't have a HW for testing, you can try:
+- [Coldcard simulator](https://github.com/Coldcard/firmware)
+- [Trezor simulator](https://docs.trezor.io/trezor-firmware/core/emulator/index.html)
+- [Ledger simulator](https://github.com/LedgerHQ/speculos)
 
-If you don't have a hardware wallet, you can try [coldcard simulator](https://github.com/Coldcard/firmware).
+**Don't use a device with funds for testing!**
 
-To run tests you should:
+Either use a testing device with no funds, or use a simulator.
 
-- Install requirements and activate the virtualenv, as specified before
-- Plug in a HW.
-- `cargo test`
-
-## Devices tested
-| Device | Tested |
-|:---:|:---:|
-| Ledger Nano X | NO
-| Ledger Nano S | YES
-| Trezor One | NO
-| Trezor Model T | YES
-| Digital BitBox | NO
-| KeepKey | NO
-| Coldcard | YES
+You can run the tests with `cargo test`.
