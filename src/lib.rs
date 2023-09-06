@@ -45,10 +45,9 @@ mod tests {
     use std::collections::BTreeMap;
     use std::str::FromStr;
 
-    use bitcoin::bip32::{DerivationPath, KeySource};
-    use bitcoin::locktime::absolute;
+    use bitcoin::util::bip32::{DerivationPath, KeySource};
     use bitcoin::psbt::{Input, Output};
-    use bitcoin::{secp256k1, Transaction};
+    use bitcoin::{LockTime, secp256k1, Transaction};
     use bitcoin::{Network, TxIn, TxOut};
 
     #[cfg(feature = "miniscript")]
@@ -210,11 +209,11 @@ mod tests {
         // Here device fingerprint is same as master xpub fingerprint
         hd_keypaths.insert(pk.public_key, (device.fingerprint, derivation_path));
 
-        let script_pubkey = address.address.assume_checked().script_pubkey();
+        let script_pubkey = address.address.script_pubkey();
 
         let previous_tx = Transaction {
             version: 1,
-            lock_time: absolute::LockTime::from_consensus(0),
+            lock_time: LockTime::from_consensus(0).into(),
             input: vec![TxIn::default()],
             output: vec![TxOut {
                 value: 100,
@@ -232,7 +231,7 @@ mod tests {
         let psbt = bitcoin::psbt::PartiallySignedTransaction {
             unsigned_tx: Transaction {
                 version: 1,
-                lock_time: absolute::LockTime::from_consensus(0),
+                lock_time: LockTime::from_consensus(0).into(),
                 input: vec![previous_txin],
                 output: vec![TxOut {
                     value: 50,

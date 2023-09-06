@@ -2,9 +2,8 @@ use std::convert::TryFrom;
 use std::ops::Deref;
 use std::str::FromStr;
 
-use bitcoin::address::{Address, NetworkUnchecked};
-use bitcoin::base64;
-use bitcoin::bip32::{ExtendedPubKey, Fingerprint};
+use bitcoin::util::address::Address;
+use bitcoin::util::bip32::{ExtendedPubKey, Fingerprint};
 use bitcoin::psbt::PartiallySignedTransaction;
 use bitcoin::Network;
 
@@ -52,7 +51,7 @@ impl Deref for HWISignature {
 
 #[derive(Clone, Eq, PartialEq, Debug, Deserialize)]
 pub struct HWIAddress {
-    pub address: Address<NetworkUnchecked>,
+    pub address: Address,
 }
 
 #[derive(Clone, Eq, PartialEq, Debug, Deserialize)]
@@ -140,10 +139,6 @@ impl IntoPy<PyObject> for HWIChain {
             Testnet => chain.get_item("TEST").unwrap().into(),
             Regtest => chain.get_item("REGTEST").unwrap().into(),
             Signet => chain.get_item("SIGNET").unwrap().into(),
-            // This handles non_exhaustive on Network which is only there to future proof
-            // rust-bitcoin, will need to check this when upgrading rust-bitcoin.
-            // Sane as of rust-bitcoin v0.30.0
-            _ => panic!("unknown network"),
         }
     }
 }

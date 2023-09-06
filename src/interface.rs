@@ -2,7 +2,7 @@ use std::convert::TryInto;
 use std::ops::Deref;
 use std::process::Command;
 
-use bitcoin::bip32::DerivationPath;
+use bitcoin::util::bip32::DerivationPath;
 use bitcoin::psbt::PartiallySignedTransaction;
 
 use serde::de::DeserializeOwned;
