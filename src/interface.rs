@@ -119,7 +119,7 @@ impl HWIClient {
             let client_args = (
                 device.device_type.to_string(),
                 &device.path,
-                "",
+                None::<&str>,
                 expert,
                 chain,
             );
